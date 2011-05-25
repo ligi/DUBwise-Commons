@@ -16,19 +16,20 @@
 
 package org.ligi.android.io;
 
-import it.gerdavax.easybluetooth.BtSocket;
-import it.gerdavax.easybluetooth.LocalDevice;
-import it.gerdavax.easybluetooth.RemoteDevice;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.UUID;
 
 import org.ligi.java.io.CommunicationAdapterInterface;
 import org.ligi.tracedroid.logging.Log;
 
+import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.BluetoothDevice;
+import android.bluetooth.BluetoothSocket;
+
 /**
- * Connection Adapter for Android Bluetooth Connections
+ * Connection Adapter for Bluetooth Connections
  * uses lib http://android-bluetooth.googlecode.com to work with 
  * Android <2.0 and have the openSocket method without the need for SDP 
  * But that uses non standard calls - so might not work everywhere ..                                    
@@ -40,9 +41,12 @@ import org.ligi.tracedroid.logging.Log;
 public class BluetoothCommunicationAdapter implements
 		CommunicationAdapterInterface {
 	
-	private BtSocket bt_connection;
-	private RemoteDevice remote_device;
 	private String mac="";
+	
+	private BluetoothDevice myDevice = null;
+	private BluetoothSocket mySocket = null;
+	// magical uuid we have from stackoverflow ^^ TODO add url
+	private static final UUID myUUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
 
 	/**
 	 * the mac addr - bytes seperated by :
@@ -54,17 +58,20 @@ public class BluetoothCommunicationAdapter implements
 	}
 
 	public int getRSSI() {
-		return remote_device.getRSSI();	 		
+		return 0; //TODO implement	 		
 	}
 
 	public void connect() {
 		try {
-			Log.i("getting device: " + mac);
-			remote_device = LocalDevice.getInstance().getRemoteForAddr(mac);
-			Log.i("ensure Paired");
-			remote_device.ensurePaired();
-			Log.i("open Socket");
-			bt_connection=remote_device.openSocket(1);
+			Log.i("getting adapter - the native Android way ");
+			BluetoothAdapter myAdapter = BluetoothAdapter.getDefaultAdapter();
+			Log.i("gettin remote device " + mac);
+			myDevice= myAdapter.getRemoteDevice(mac);
+			Log.i("getting socket");
+			mySocket = myDevice.createRfcommSocketToServiceRecord(myUUID);
+			Log.i("connecting socket");
+			mySocket.connect();
+			
 			Log.i("done connection sequence");
 		}
 		catch(Exception e) { Log.w(""+e); }
@@ -80,14 +87,14 @@ public class BluetoothCommunicationAdapter implements
 	    } catch (Exception e) {	    }
 	    
 	    try {
-	    	bt_connection.close();
+	    	mySocket.close();
 	    } catch (Exception e) {	    }
 	}
 
 	public InputStream getInputStream() {
 
 		try {
-			return bt_connection.getInputStream();
+			return mySocket.getInputStream();
 		} catch (Exception e) {
 			Log.i("DUBwise","getInputstream problem" + e);
 			connect();
@@ -97,7 +104,7 @@ public class BluetoothCommunicationAdapter implements
 
 	public OutputStream getOutputStream() {
 		try {
-			return bt_connection.getOutputStream();
+			return mySocket.getOutputStream();
 		} catch (Exception e) {
 			return null;
 		}
@@ -135,13 +142,11 @@ public class BluetoothCommunicationAdapter implements
 		return getInputStream().read();
 	}
 
-    public void getName() {
-        // TODO Auto-generated method stub
-        
-    }
+	public String getName() {
+		return "no name";	// TODO implement name/url stuff
+	}
 
-    public void getURL() {
-        // TODO Auto-generated method stub
-        
-    }
+	public String getURL() {
+		return "no url";  // TODO implement name/url stuff
+	}
 }
