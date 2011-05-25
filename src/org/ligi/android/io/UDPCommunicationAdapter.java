@@ -15,7 +15,6 @@
  */
 package org.ligi.android.io;
 
-
 import java.io.IOException;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
@@ -85,11 +84,11 @@ public class UDPCommunicationAdapter implements
 	  return -1;
 	}
 
-    public void getName() {
-        // TODO Auto-generated method stub
-    }
+	public String getName() {
+		return "no name";	// TODO implement name/url stuff
+	}
 
-    public void getURL() {
-        // TODO Auto-generated method stub
-    }
+	public String getURL() {
+		return "no url";  // TODO implement name/url stuff
+	}
 }
