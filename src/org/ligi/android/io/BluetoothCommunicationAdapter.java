@@ -72,6 +72,7 @@ public class BluetoothCommunicationAdapter implements
 			Log.i("connecting socket");
 			mySocket.connect();
 			
+			
 			Log.i("done connection sequence");
 		}
 		catch(Exception e) { Log.w(""+e); }
@@ -97,7 +98,7 @@ public class BluetoothCommunicationAdapter implements
 			return mySocket.getInputStream();
 		} catch (Exception e) {
 			Log.i("DUBwise","getInputstream problem" + e);
-			connect();
+			//connect();
 			return null;
 		}
 	}
@@ -122,9 +123,7 @@ public class BluetoothCommunicationAdapter implements
 		getOutputStream().flush();
 	}
 
-	public int read(byte[] b, int offset, int length) throws IOException {
-		return getInputStream().read(b,offset,length);
-	}
+
 
 	public void write(byte[] buffer, int offset, int count) throws IOException {
 		getOutputStream().write(buffer, offset, count);
@@ -138,8 +137,18 @@ public class BluetoothCommunicationAdapter implements
 		getOutputStream().write(oneByte);
 	}
 
+	public int read(byte[] b, int offset, int length) throws IOException {
+		if (getInputStream().available()>0)
+			return getInputStream().read(b,offset,length);
+		else
+			return 0;
+	}
+	
 	public int read() throws IOException {
-		return getInputStream().read();
+		if (getInputStream().available()>0)
+			return getInputStream().read();
+		
+		return -1;
 	}
 
 	public String getName() {
