@@ -46,6 +46,7 @@ public class BluetoothCommunicationAdapter implements
 	private BluetoothDevice myDevice = null;
 	private BluetoothSocket mySocket = null;
 	// magical uuid we have from stackoverflow ^^ TODO add url
+	//private static final UUID myUUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
 	private static final UUID myUUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
 
 	/**
@@ -66,6 +67,7 @@ public class BluetoothCommunicationAdapter implements
 			Log.i("getting adapter - the native Android way ");
 			BluetoothAdapter myAdapter = BluetoothAdapter.getDefaultAdapter();
 			Log.i("gettin remote device " + mac);
+			myAdapter.cancelDiscovery();
 			myDevice= myAdapter.getRemoteDevice(mac);
 			Log.i("getting socket");
 			mySocket = myDevice.createRfcommSocketToServiceRecord(myUUID);

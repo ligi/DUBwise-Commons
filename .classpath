@@ -6,5 +6,6 @@
 	<classpathentry kind="lib" path="lib/android_bluetooth2.0.jar"/>
 	<classpathentry kind="lib" path="lib/tracedroid.jar"/>
 	<classpathentry kind="lib" path="lib/ligi_java_commons.jar"/>
-	<classpathentry kind="output" path="bin"/>
+	<classpathentry kind="con" path="com.android.ide.eclipse.adt.LIBRARIES"/>
+	<classpathentry kind="output" path="bin/classes"/>
 </classpath>
