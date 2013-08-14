@@ -10,7 +10,7 @@ buildscript {
 apply plugin: 'android-library'
 apply from: 'ci/deploy.gradle'
 
-version=0.1
+version=0.4
 
 repositories {
     mavenCentral()
@@ -26,7 +26,7 @@ android {
     buildToolsVersion "17.0.0"
 
     dependencies {
-        compile fileTree(dir: 'lib', include: '*.jar')
+        compile 'org.ligi:tracedroid:1.1'
     }
 
 }
