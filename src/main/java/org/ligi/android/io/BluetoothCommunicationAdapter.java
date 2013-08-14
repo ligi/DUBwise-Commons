@@ -22,11 +22,11 @@ import java.io.OutputStream;
 import java.util.UUID;
 
 import org.ligi.java.io.CommunicationAdapterInterface;
-import org.ligi.tracedroid.logging.Log;
 
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
+//import org.ligi.tracedroid.logging.Log;
 
 /**
  * Connection Adapter for Bluetooth Connections
@@ -38,9 +38,22 @@ import android.bluetooth.BluetoothSocket;
  * @author ligi ( aka: Marcus Bueschleb | mail: ligi at ligi dot de )
  *
  */
-public class BluetoothCommunicationAdapter implements
-		CommunicationAdapterInterface {
+public class BluetoothCommunicationAdapter 
+   implements CommunicationAdapterInterface 
+	{
 	
+	 static class Log {
+		public static  void i(String msg) {
+			android.util.Log.i("Dubwise",msg);
+		};
+		public static void w(String msg) {
+			android.util.Log.w("Dubwise",msg);
+		};
+		
+		public static void e(String msg) {
+			android.util.Log.e("Dubwise",msg);
+		};
+	}
 	private String mac="";
 	
 	private BluetoothDevice myDevice = null;
@@ -48,7 +61,7 @@ public class BluetoothCommunicationAdapter implements
 	// magical uuid we have from stackoverflow ^^ TODO add url
 	//private static final UUID myUUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
 	private static final UUID myUUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
-
+	                                                    
 	/**
 	 * the mac addr - bytes seperated by :
 	 * 
@@ -64,10 +77,15 @@ public class BluetoothCommunicationAdapter implements
 
 	public void connect() {
 		try {
-			Log.i("getting adapter - the native Android way ");
+			//Looper.prepare();
+			//Log.i("getting adapter - the native Android way ");
+			Log.i("getting adapter - Test ");
 			BluetoothAdapter myAdapter = BluetoothAdapter.getDefaultAdapter();
 			Log.i("gettin remote device " + mac);
-			myAdapter.cancelDiscovery();
+			
+			if (myAdapter.isDiscovering())
+				myAdapter.cancelDiscovery();
+						
 			myDevice= myAdapter.getRemoteDevice(mac);
 			Log.i("getting socket");
 			mySocket = myDevice.createRfcommSocketToServiceRecord(myUUID);
@@ -81,6 +99,7 @@ public class BluetoothCommunicationAdapter implements
 	}
 
 	public void disconnect() {
+		Log.i("BTCONN disconnect trigger");
 		try {
 			getInputStream().close();
 	    } catch (Exception e) {	    }
@@ -99,7 +118,7 @@ public class BluetoothCommunicationAdapter implements
 		try {
 			return mySocket.getInputStream();
 		} catch (Exception e) {
-			Log.i("DUBwise","getInputstream problem" + e);
+			Log.i("getInputstream problem" + e);
 			//connect();
 			return null;
 		}

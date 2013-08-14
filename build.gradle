@@ -1,0 +1,32 @@
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:0.5.+'
+    }
+}
+
+apply plugin: 'android-library'
+apply from: 'ci/deploy.gradle'
+
+version=0.1
+
+repositories {
+    mavenCentral()
+    maven {
+        url "file:///home/ligi/git/ligis-mvn-repo"
+        //url "https://raw.github.com/ligi/ligis-mvn-repo/master"
+    }
+}
+
+
+android {
+    compileSdkVersion 18
+    buildToolsVersion "17.0.0"
+
+    dependencies {
+        compile fileTree(dir: 'lib', include: '*.jar')
+    }
+
+}
